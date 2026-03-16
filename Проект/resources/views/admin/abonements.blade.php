@@ -32,6 +32,19 @@
 
     <div class="admin-list">
         <h3>Список абонементов</h3>
+        <form method="get" action="{{ route('admin.abonements') }}" class="filter-form">
+            <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
+            <select name="sort_by" class="filter-input">
+                <option value="latest" {{ request('sort_by', 'latest') === 'latest' ? 'selected' : '' }}>Новые сначала</option>
+                <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
+                <option value="price_asc" {{ request('sort_by') === 'price_asc' ? 'selected' : '' }}>Цена ↑</option>
+                <option value="price_desc" {{ request('sort_by') === 'price_desc' ? 'selected' : '' }}>Цена ↓</option>
+            </select>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-accent">Поиск</button>
+                <a href="{{ route('admin.abonements') }}" class="btn btn-danger">Сброс</a>
+            </div>
+        </form>
         <table>
             <thead>
                 <tr>
@@ -43,34 +56,39 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($abonements as $abonement)
-                    <tr>
-                        <td>{{ $abonement->name }}</td>
-                        <td>{{ $abonement->price }} ₽</td>
-                        <td>{{ $abonement->visits }}</td>
-                        <td style="max-width:250px; font-size:12px; opacity:0.8;">{{ $abonement->description ?? '—' }}</td>
-                        <td>
-                            <button type="button" class="btn btn-outline js-edit-abonement"
-                                data-id="{{ $abonement->id }}"
-                                data-name="{{ $abonement->name }}"
-                                data-visits="{{ $abonement->visits }}"
-                                data-price="{{ $abonement->price }}"
-                                data-description="{{ $abonement->description }}"
-                                style="margin-right:8px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
-                                Редактировать
-                            </button>
-                            <form action="{{ route('admin.delete-abonement', $abonement->id) }}" method="post" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-danger" style="display:inline-flex; align-items:center; gap:8px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                                    Удалить
+                @if($abonements->count())
+                    @foreach($abonements as $abonement)
+                        <tr>
+                            <td>{{ $abonement->name }}</td>
+                            <td>{{ $abonement->price }} ₽</td>
+                            <td>{{ $abonement->visits }}</td>
+                            <td class="td-description">{{ $abonement->description ?? '—' }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline btn-icon-gap js-edit-abonement"
+                                    data-id="{{ $abonement->id }}"
+                                    data-name="{{ $abonement->name }}"
+                                    data-visits="{{ $abonement->visits }}"
+                                    data-price="{{ $abonement->price }}"
+                                    data-description="{{ $abonement->description }}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
+                                    Редактировать
                                 </button>
-                            </form>
-                        </td>
+                                <form action="{{ route('admin.delete-abonement', $abonement->id) }}" method="post" class="form-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-danger btn-icon-gap">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                        Удалить
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="5" class="td-empty">Нет совпадений по выбранным критериям</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>
@@ -79,7 +97,7 @@
     <div id="editAbonementModal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeAbonementModal()"></div>
         <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editAbonementTitle">
-            <button class="close-btn" type="button" onclick="closeAbonementModal()" style="position:absolute; right:12px; top:12px;">
+            <button class="close-btn modal-close" type="button" onclick="closeAbonementModal()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <h3 id="editAbonementTitle">Редактировать абонемент</h3>
@@ -98,7 +116,7 @@
                 <label>Описание</label>
                 <textarea name="edit_description" id="a_description">{{ old('edit_description') }}</textarea>
                 @error('edit_description') <span class="error-msg">{{ $message }}</span> @enderror
-                <div style="margin-top:12px; display:flex; gap:10px; justify-content:flex-end;">
+                <div class="form-actions">
                     <button type="button" class="btn btn-outline" onclick="closeAbonementModal()">Отмена</button>
                     <button type="submit" class="btn btn-accent">Сохранить</button>
                 </div>

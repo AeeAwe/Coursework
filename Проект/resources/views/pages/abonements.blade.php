@@ -22,18 +22,18 @@
 									@if(auth()->check())
 										@if(auth()->user()->role === 'client')
                                             @if(auth()->user()->abonements()->whereIn('status', ['pending','active'])->exists())
-											<p style="color:#999; font-size:14px;">У вас уже есть абонемент</p>
+										<p class="text-muted">У вас уже есть абонемент</p>
                                             @else
-											<form action="{{ route('abonements.book', $abon->id) }}" method="post" style="display:inline;">
+										<form action="{{ route('abonements.book', $abon->id) }}" method="post" class="form-inline">
 												@csrf
-												<button type="submit" class="btn btn-accent">Купить</button>
+												<button type="submit" class="btn btn-accent">Приобрести</button>
 											</form>
                                             @endif
 										@else
-											<p style="color:#999; font-size:14px;">Неподходящая роль пользователя</p>
+											<p class="text-muted">Неподходящая роль пользователя</p>
 										@endif
 									@else
-										<p style="color:#999; font-size:14px;">Войдите, чтобы приобрести</p>
+										<p class="text-muted">Войдите, чтобы приобрести</p>
 									@endif
 								</div>
 							</div>

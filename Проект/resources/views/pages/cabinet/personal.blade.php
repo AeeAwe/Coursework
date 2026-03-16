@@ -19,7 +19,7 @@
         @if (Auth::user()->role === 'admin')
             <a href="{{ route('admin.users') }}" class="btn btn-accent">Изменение данных</a>
         @else
-            <p style="margin-top:24px; opacity:.85;">Изменение личных данных доступно только администратору</p>
+            <p class="text-semi-muted">Изменение личных данных доступно только администратору</p>
         @endif
     </div>
 </div>

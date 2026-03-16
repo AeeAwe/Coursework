@@ -5,43 +5,43 @@
 @section('main')
 <section class="trainer-section padding-y-100">
     <h1 class="title title-large">Участники: {{ $schedule->name }}</h1>
-    <p style="color:#999; margin-bottom:20px;">{{ \Carbon\Carbon::parse($schedule->date)->format('d.m.Y H:i') }}</p>
+    <p class="text-muted mb-20">{{ \Carbon\Carbon::parse($schedule->date)->format('d.m.Y H:i') }}</p>
 
     <div class="as-list">
-        <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-            <thead style="background:#252738;">
+        <table class="trainer-table">
+            <thead class="trainer-table-head">
                 <tr>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Имя</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Email</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Телефон</th>
-                    <th style="padding:12px; text-align:center; border:1px solid #444;">Статус</th>
-                    <th style="padding:12px; text-align:center; border:1px solid #444;">Действие</th>
+                    <th class="trainer-table-header">Имя</th>
+                    <th class="trainer-table-header">Э-мейл</th>
+                    <th class="trainer-table-header">Телефон</th>
+                    <th class="trainer-table-header trainer-table-header-center">Статус</th>
+                    <th class="trainer-table-header trainer-table-header-center">Действие</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($schedule->activities as $a)
-                    <tr style="background:#1E1E1E; border:1px solid #444;">
-                        <td style="padding:12px; border:1px solid #444;">{{ $a->user->fio }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ $a->user->phone }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ $a->user->email }}</td>
-                        <td style="padding:12px; text-align:center; border:1px solid #444;">
+                    <tr class="trainer-table-row">
+                        <td class="trainer-table-cell">{{ $a->user->fio }}</td>
+                        <td class="trainer-table-cell">{{ $a->user->phone }}</td>
+                        <td class="trainer-table-cell">{{ $a->user->email }}</td>
+                        <td class="trainer-table-cell trainer-table-cell-center">
                             @if($a->status === 'recorded')
-                                <span style="color:#FFC107;">Записан</span>
+                                <span class="status-recorded">Записан</span>
                             @elseif($a->status === 'attended')
-                                <span style="color:#4CAF50;">Посещал</span>
+                                <span class="status-attended">Посещал</span>
                             @endif
                         </td>
-                        <td style="padding:12px; text-align:center; border:1px solid #444;">
+                        <td class="trainer-table-cell trainer-table-cell-center">
                             @if($a->status === 'recorded')
-                                <form action="{{ route('trainer.mark-attendance', $a->id) }}" method="post" style="display:inline;">
+                                <form action="{{ route('trainer.mark-attendance', $a->id) }}" method="post" class="form-inline">
                                     @csrf
-                                    <button type="submit" class="btn btn-accent" style="background:#4CAF50; padding:5px 10px; font-size:12px; margin-right:5px;">Отметить</button>
+                                    <button type="submit" class="btn btn-success">Отметить</button>
                                 </form>
                             @endif
-                            <form action="{{ route('trainer.cancel-a', $a->id) }}" method="post" style="display:inline;">
+                            <form action="{{ route('trainer.cancel-a', $a->id) }}" method="post" class="form-inline">
                                 @csrf
                                 @method('POST')
-                                <button type="submit" class="btn btn-accent" style="background:#D00000; padding:5px 10px; font-size:12px;">Отменить</button>
+                                <button type="submit" class="btn btn-danger-small">Отменить</button>
                             </form>
                         </td>
                     </tr>
@@ -49,7 +49,7 @@
             </tbody>
         </table>
         @if($schedule->activities->isEmpty())
-            <p style="margin-top:20px; color:#999;">Нет зарегистрированных участников.</p>
+            <p class="empty-state-margin">Нет зарегистрированных участников.</p>
         @endif
     </div>
 </section>

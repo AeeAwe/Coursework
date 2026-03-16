@@ -1,6 +1,24 @@
 'use strict';
 
-// Скрипт копирования тестовых данных )
+const togglePasswordBtn = document.getElementById('toggle-password');
+if (togglePasswordBtn) {
+    const passwordInput = document.getElementById('password');
+    const openIcon = document.querySelector('.open');
+    const closeIcon = document.querySelector('.close');
+    togglePasswordBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const isPassword = passwordInput.type === 'password';
+        if (isPassword) {
+            passwordInput.type = 'text';
+            openIcon.classList.add('hidden');
+            closeIcon.classList.remove('hidden');
+        } else {
+            passwordInput.type = 'password';
+            closeIcon.classList.add('hidden');
+            openIcon.classList.remove('hidden');
+        }
+    });
+}
 
 if (window.location.pathname === '/login') {
     const parent = document.querySelector('.for-test');
@@ -22,8 +40,6 @@ if (window.location.pathname === '/login') {
     }
 }
 
-// Подсветка активной страницы в навигации
-
 const checkLocate = () => {
     const loc = location.pathname;
     const links = document.querySelectorAll("ul li a");
@@ -39,7 +55,6 @@ const checkLocate = () => {
 };
 checkLocate();
 
-// Слайдер на главной странице
 if (window.location.pathname === '/') {
     const slider = document.querySelector('.slider');
     const sliderList = document.querySelector('.slider-list');
@@ -51,7 +66,6 @@ if (window.location.pathname === '/') {
 
     let currentIndex = 0;
     const totalSlides = sliderItems.length;
-
     paginationTo.textContent = totalSlides.toString().padStart(2, '0');
 
     function updateCounter() {
@@ -59,25 +73,20 @@ if (window.location.pathname === '/') {
     }
 
     function updateSlider() {
-
         const slideWidth = sliderItems[0].offsetWidth;
         const gap = parseInt(window.getComputedStyle(sliderList).getPropertyValue('gap'));
         const totalOffset = currentIndex * (slideWidth + gap);
-
         sliderList.style.transform = `translateX(-${totalOffset}px)`;
         updateCounter();
     }
-
     prevBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex--;
         } else {
-
             currentIndex = totalSlides - 1;
         }
         updateSlider();
     });
-
     nextBtn.addEventListener('click', () => {
         if (currentIndex < totalSlides - 1) {
             currentIndex++;
@@ -87,8 +96,6 @@ if (window.location.pathname === '/') {
         }
         updateSlider();
     });
-
     window.addEventListener('resize', updateSlider);
-
     updateSlider();
 }

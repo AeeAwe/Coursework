@@ -12,9 +12,9 @@
             <div class="nav-action">
                 @auth
                     @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.abonements.bookings') }}" class="btn btn-outline" style="margin-right:10px;">Админ-панель</a>
+                        <a href="{{ route('admin.abonements.bookings') }}" class="btn btn-outline mr-10">Админ-панель</a>
                     @elseif(auth()->user()->role === 'trainer')
-                        <a href="{{ route('trainer.schedule') }}" class="btn btn-outline" style="margin-right:10px;">Тренер-панель</a>
+                        <a href="{{ route('trainer.schedule') }}" class="btn btn-outline mr-10">Тренер-панель</a>
                     @endif
                         <a href="{{ route('cabinet.abonements') }}" class="btn btn-accent">Личный кабинет</a>
                 @else

@@ -12,9 +12,14 @@
                     <div class="abon-details text-large">Осталось посещений: {{ $abon->visits_left ?? '—' }} из {{ $abon->abonement->visits }}</div>
                     <div class="abon-details text-large">Цена: {{ $abon->abonement->price ?? '—' }} ₽</div>
                     <div class="abon-details text-large">Описание: {{ $abon->abonement->description ?? '—' }}</div>
-                    <div class="abon-status title-small" style="color: #FCC40A; margin-top: 8px;">
+                    <div class="abon-status title-small abon-status-active mt-8">
                         @if($abon->status === 'pending')
                             ⏳ В ожидании подтверждения
+                            <form action="{{ route('cabinet.abonements.cancel', $abon->id) }}" method="POST" class="form-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-accent">Отменить</button>
+                            </form>
                         @elseif($abon->status === 'active')
                             ✓ Активно
                         @endif
@@ -28,14 +33,14 @@
                 @endif
             @endforelse
         </ul>
-        <h3 class="title title-small" style="margin-top:24px;">Архив абонементов</h3>
+        <h3 class="title title-small mt-24">Архив абонементов</h3>
         <ul class="abonements-list">
             @forelse($user->abonements->whereIn('status', ['ended','rejected']) as $abon)
                 <li class="abonement-item">
                     <div class="abon-name title-small">{{ $abon->abonement->name ?? 'Абонемент' }}</div>
                     <div class="abon-details text-large">Цена: {{ $abon->abonement->price ?? '—' }} ₽</div>
                     <div class="abon-details text-large">Описание: {{ $abon->abonement->description ?? '—' }}</div>
-                    <div class="abon-status title-small" style="color: #FCC40A; margin-top: 8px;">
+                    <div class="abon-status title-small abon-status-active mt-8">
                         @if($abon->status === 'ended')
                             ✗ Закончено
                         @elseif($abon->status === 'rejected')

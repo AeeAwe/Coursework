@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserAbonement;
 use App\Models\UserActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -38,5 +39,16 @@ class CabinetController extends Controller
         }
         $userActivity->delete();
         return redirect()->route('cabinet')->with('success', 'Запись отменена.');
+    }
+    public function cancel_abonement (UserAbonement $userAbonement) {
+        $user = Auth::user();
+        if ($userAbonement->user_id !== $user->id) {
+            return back()->with('error', 'Вы не можете отменить чужой абонемент');
+        }
+        if ($userAbonement->status !== 'pending') {
+            return back()->with('error', 'Можно отменить только абонементы в ожидании подтверждения');
+        }
+        $userAbonement->delete();
+        return redirect()->route('cabinet.abonements')->with('success', 'Абонемент отменен');
     }
 }

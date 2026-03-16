@@ -7,22 +7,22 @@
     <h1 class="title title-large">Мое расписание</h1>
 
     <div class="schedule-list">
-        <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-            <thead style="background:#252738;">
+        <table class="trainer-table">
+            <thead class="trainer-table-head">
                 <tr>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Занятие</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Дата и время</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Записано</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Статус</th>
-                    <th style="padding:12px; text-align:center; border:1px solid #444;">Действие</th>
+                    <th class="trainer-table-header">Занятие</th>
+                    <th class="trainer-table-header">Дата и время</th>
+                    <th class="trainer-table-header">Записано</th>
+                    <th class="trainer-table-header">Статус</th>
+                    <th class="trainer-table-header trainer-table-header-center">Действие</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($schedule as $item)
-                    <tr style="background:#1E1E1E; border:1px solid #444;">
-                        <td style="padding:12px; border:1px solid #444;">{{ $item->name }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ \Carbon\Carbon::parse($item->date)->format('d.m.Y H:i') }}</td>
-                        <td style="padding:12px; border:1px solid #444;">
+                    <tr class="trainer-table-row">
+                        <td class="trainer-table-cell">{{ $item->name }}</td>
+                        <td class="trainer-table-cell">{{ \Carbon\Carbon::parse($item->date)->format('d.m.Y H:i') }}</td>
+                        <td class="trainer-table-cell">
                             {{ $item->activities->whereIn('status', ['recorded','attended'])->count() }} / {{ $item->capacity }}
                         </td>
                         @php
@@ -33,16 +33,16 @@
                             default   => '—',
                         };
                         @endphp
-                        <td style="padding:12px; border:1px solid #444;">{{ $status }}</td>
-                        <td style="padding:12px; text-align:center; border:1px solid #444;">
-                            <a href="{{ route('trainer.activity', $item->id) }}" class="btn btn-accent" style="padding:5px 10px; font-size:12px; text-decoration:none;">Участники</a>
+                        <td class="trainer-table-cell">{{ $status }}</td>
+                        <td class="trainer-table-cell trainer-table-cell-center">
+                            <a href="{{ route('trainer.activity', $item->id) }}" class="btn btn-accent btn-sm">Участники</a>
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
         @if($schedule->isEmpty())
-            <p style="margin-top:20px; color:#999;">У вас пока нет занятий.</p>
+            <p class="empty-state-margin">У вас пока нет занятий.</p>
         @endif
     </div>
     <x-pagination :i="$schedule"/>

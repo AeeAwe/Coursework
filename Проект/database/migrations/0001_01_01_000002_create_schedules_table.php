@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->dateTime('date');
             $table->integer('capacity')->default(15);
-            $table->enum('status', ['active','full','ended'])->default('active');
+            $table->enum('status', ['active','completed','canceled'])->default('active');
             $table->timestamps();
         });
     }

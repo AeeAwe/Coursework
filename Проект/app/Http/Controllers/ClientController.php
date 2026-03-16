@@ -38,6 +38,11 @@ class ClientController extends Controller
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
         $trainerId = $request->input('trainer');
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'date');
+
+        $query->where('status', 'active')->where('date', '>=', Carbon::now());
+
         if ($dateFrom) {
             $query->where('date', '>=', date('Y-m-d 00:00:00', strtotime($dateFrom)));
         }
@@ -47,7 +52,19 @@ class ClientController extends Controller
         if ($trainerId) {
             $query->where('trainer_id', $trainerId);
         }
-        $schedule = $query->orderBy('date','asc')->paginate(10);
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        if ($sortBy === 'date') {
+            $query->orderBy('date', 'asc');
+        } elseif ($sortBy === 'availability') {
+            $query->orderByRaw('(capacity - (SELECT COUNT(*) FROM user_activities WHERE schedule_id = schedules.id AND status IN ("recorded", "attended"))) ASC');
+        } elseif ($sortBy === 'name') {
+            $query->orderBy('name', 'asc');
+        }
+
+        $schedule = $query->paginate(10);
         $trainers = User::where('role', 'trainer')->get();
         return view('pages.schedule', compact(['schedule','trainers']));
     }

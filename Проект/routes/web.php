@@ -27,6 +27,7 @@ Route::middleware(['auth','client'])->group(function() {
     Route::post('/abonements/book/{abonement}', [ClientController::class, 'bookAbonement'])->name('abonements.book');
     Route::post('/schedules/book/{schedule}', [ClientController::class, 'bookSchedule'])->name('schedules.book');
     Route::delete('/cabinet/activities/delete/{userActivity}', [ClientController::class, 'cancel_activity'])->name('cabinet.activities.cancel');
+    Route::delete('/cabinet/abonements/cancel/{userAbonement}', [CabinetController::class, 'cancel_abonement'])->name('cabinet.abonements.cancel');
 });
 Route::middleware(['auth','admin'])->group(function() {
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
@@ -47,6 +48,7 @@ Route::middleware(['auth','admin'])->group(function() {
     Route::get('/admin/schedule', [AdminController::class, 'scheduleManage'])->name('admin.schedule');
     Route::post('/admin/schedule', [AdminController::class, 'createSchedule'])->name('admin.create-schedule');
     Route::put('/admin/schedule/{schedule}', [AdminController::class, 'updateSchedule'])->name('admin.update-schedule');
+    Route::patch('/admin/schedule/{schedule}/status', [AdminController::class, 'updateScheduleStatus'])->name('admin.update-schedule-status');
     Route::delete('/admin/schedule/{schedule}', [AdminController::class, 'deleteSchedule'])->name('admin.delete-schedule');
 
 });

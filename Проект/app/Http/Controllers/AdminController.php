@@ -42,10 +42,26 @@ class AdminController extends Controller
     public function users(Request $request)
     {
         $query = User::query();
+        $sortBy = $request->input('sort_by', 'id_desc');
 
         if ($request->filled('role')) {
             $query->where('role', $request->role);
         }
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('fio', 'like', '%' . $search . '%')
+                  ->orWhere('login', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        match ($sortBy) {
+            'fio_asc' => $query->orderBy('fio', 'asc'),
+            'login_asc' => $query->orderBy('login', 'asc'),
+            default => $query->orderBy('id', 'desc'),
+        };
 
         $users = $query->paginate(15);
         return view('admin.users', compact('users'));
@@ -140,6 +156,8 @@ class AdminController extends Controller
         $dateTo = $request->input('date_to');
         $trainerId = $request->input('trainer_id') ?? $request->input('trainer');
         $status = $request->input('status');
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by', 'id_desc');
 
         if ($dateFrom) {
             $query->where('date', '>=', date('Y-m-d 00:00:00', strtotime($dateFrom)));
@@ -153,8 +171,18 @@ class AdminController extends Controller
         if ($status) {
             $query->where('status', $status);
         }
+        if ($search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
 
-        $schedule = $query->orderBy('id','desc')->paginate(15);
+        match ($sortBy) {
+            'date_asc' => $query->orderBy('date', 'asc'),
+            'date_desc' => $query->orderBy('date', 'desc'),
+            'name_asc' => $query->orderBy('name', 'asc'),
+            default => $query->orderBy('id', 'desc'),
+        };
+
+        $schedule = $query->paginate(15);
         $trainers = User::where('role', 'trainer')->get();
         return view('admin.schedule', compact('schedule', 'trainers'));
     }
@@ -217,9 +245,24 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Занятие удалено');
     }
 
-    public function abonementsManage()
+    public function abonementsManage(Request $request)
     {
-        $abonements = Abonement::latest()->get();
+        $query = Abonement::query();
+        $sortBy = $request->input('sort_by', 'latest');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+
+        match ($sortBy) {
+            'name_asc' => $query->orderBy('name', 'asc'),
+            'price_asc' => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            default => $query->latest(),
+        };
+
+        $abonements = $query->get();
         return view('admin.abonements', compact('abonements'));
     }
 
@@ -271,5 +314,18 @@ class AdminController extends Controller
     {
         Abonement::findOrFail($abonementId)->delete();
         return redirect()->back()->with('success', 'Абонемент удалён');
+    }
+
+    public function updateScheduleStatus(Request $request, $scheduleId)
+    {
+        $schedule = Schedule::findOrFail($scheduleId);
+        $status = $request->input('status');
+
+        if (!in_array($status, ['active', 'completed', 'cancelled'])) {
+            return redirect()->back()->with('error', 'Невалидный статус');
+        }
+
+        $schedule->update(['status' => $status]);
+        return redirect()->back()->with('success', 'Статус занятия изменен на: ' . ($status === 'active' ? 'Активно' : ($status === 'completed' ? 'Завершено' : 'Отменено')));
     }
 }

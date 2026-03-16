@@ -7,6 +7,10 @@
 	<div>
 		<h1 class="title title-large">Расписание занятий</h1>
 		<form method="get" action="{{ route('schedule') }}" class="schedule-filters">
+		<div class="filter-item">
+			<label for="search" class="text-small">Поиск</label>
+			<input type="text" name="search" id="search" placeholder="Название занятия..." value="{{ request('search') }}" class="filter-input">
+			</div>
 			<div class="filter-item">
 				<label for="date_from" class="text-small">Дата от</label>
 				<input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="filter-input">
@@ -26,9 +30,17 @@
 					@endif
 				</select>
 			</div>
+			<div class="filter-item">
+				<label for="sort_by" class="text-small">Сортировка</label>
+				<select name="sort_by" id="sort_by" class="filter-input">
+					<option value="date" {{ request('sort_by', 'date') === 'date' ? 'selected' : '' }}>По дате</option>
+					<option value="availability" {{ request('sort_by') === 'availability' ? 'selected' : '' }}>По свободным местам</option>
+					<option value="name" {{ request('sort_by') === 'name' ? 'selected' : '' }}>По названию</option>
+				</select>
+			</div>
 			<div class="filter-actions">
-				<button type="submit" class="btn btn-outline">Применить</button>
-                <a href="{{ route('schedule') }}" class="btn btn-outline">Сброс</a>
+				<button type="submit" class="btn btn-accent">Применить</button>
+                <a href="{{ route('schedule') }}" class="btn btn-danger">Сброс</a>
                 <a href="{{ route('cabinet.abonements') }}" class="btn btn-accent">Мой кабинет</a>
 			</div>
 		</form>
@@ -49,22 +61,22 @@
 									@if(auth()->check())
 										@if(auth()->user()->role === 'client')
                                             @if(!auth()->user()->abonements()->where('status','active')->exists())
-                                                <button class="btn btn-accent" disabled style="background:#666; cursor:not-allowed;">Необходим активный абонемент</button>
+                                                <button class="btn btn-accent btn-disabled" disabled>Необходим активный абонемент</button>
                                             @elseif($item->activities()->where('user_id', auth()->id())->exists())
-                                                <button class="btn btn-accent" disabled style="background:#666; cursor:not-allowed;">Вы уже записаны</button>
+                                                <button class="btn btn-accent btn-disabled" disabled>Вы уже записаны</button>
                                             @elseif($item->activities()->whereIn('status', ['recorded', 'attended'])->count() >= $item->capacity)
-												<button class="btn btn-accent" disabled style="background:#666; cursor:not-allowed;">Занятие полностью заполнено</button>
+												<button class="btn btn-accent btn-disabled" disabled>Занятие полностью заполнено</button>
                                             @else
-												<form action="{{ route('schedules.book', $item->id) }}" method="post" style="display:inline;">
+												<form action="{{ route('schedules.book', $item->id) }}" method="post" class="form-inline">
 													@csrf
 													<button type="submit" class="btn btn-accent">Записаться</button>
 												</form>
 											@endif
 										@else
-											<p style="color:#999; font-size:14px;">Неподходящая роль пользователя</p>
+											<p class="text-muted">Неподходящая роль пользователя</p>
 										@endif
 									@else
-										<p style="color:#999; font-size:14px;">Войдите, чтобы записаться</p>
+										<p class="text-muted">Войдите, чтобы записаться</p>
 									@endif
 								</div>
 							</div>
@@ -72,7 +84,10 @@
 					@endforeach
 				</div>
 			@else
-				<div class="empty">Занятия отсутствуют</div>
+				<div class="empty-state">
+					<h3>Нет совпадений</h3>
+					<p>Занятия не найдены по выбранным критериям</p>
+				</div>
 			@endif
 		</div>
         <x-pagination :i="$schedule"/>

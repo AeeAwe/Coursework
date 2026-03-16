@@ -16,7 +16,7 @@
                         <span class="record-instructor">{{ $activity->schedule->trainer->fio ?? '—' }}</span>
                         <span class="record-status">{{ $activity->status == 'recorded' ? 'Записано' : ($activity->status == 'attended' ? 'Посещено' : '—') }}</span>
                         @if(isset($activity->schedule->date) && \Carbon\Carbon::parse($activity->schedule->date)->isFuture())
-                            <form action="{{ route('cabinet.activities.cancel', $activity->id ?? $activity['id']) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('cabinet.activities.cancel', $activity->id ?? $activity['id']) }}" method="POST" class="form-inline">
                                 @csrf
                                 @method('delete')
                                 <button type="submit" class="btn btn-outline btn-xs">Отменить</button>
@@ -32,7 +32,7 @@
                 @endif
             @endforelse
         </ul>
-        <h3 class="title title-small" style="margin-top:20px;">Архивные занятия</h3>
+        <h3 class="title title-small mt-20">Архивные занятия</h3>
         <ul class="records-list">
             @forelse($user->activities->where('status', 'attended') as $activity)
                 <li class="record-item">

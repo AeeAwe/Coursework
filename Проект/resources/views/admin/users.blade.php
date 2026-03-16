@@ -6,7 +6,7 @@
     <h1 class="title title-large">Пользователи</h1>
     <div class="admin-form">
         <h3>Создать нового пользователя</h3>
-        <form action="{{ route('admin.register') }}" method="post" style="display:flex; flex-direction:column; gap:15px; max-width:500px;">
+        <form action="{{ route('admin.register') }}" method="post" class="admin-form-inner">
             @csrf
             <div>
                 <input type="text" name="fio" placeholder="ФИО" value="{{ old('fio') }}">
@@ -40,70 +40,83 @@
         </form>
     </div>
 
-    <div class="users-list">
+    <div class="admin-list">
         <h3>Список пользователей</h3>
-        <div class="filters" style="margin-bottom:20px; display:flex; gap:10px; align-items:center;">
-            <form method="get" style="display:flex; gap:10px; align-items:center;">
+        <div class="filters">
+            <form method="get">
+                <input type="text" name="search" placeholder="Поиск (ФИО, логин, email)" value="{{ request('search') }}" class="filter-input">
                 <select name="role" class="filter-input">
                     <option value="">Все роли</option>
                     <option value="client" @if(request('role') === 'client') selected @endif>Клиент</option>
                     <option value="trainer" @if(request('role') === 'trainer') selected @endif>Тренер</option>
                     <option value="admin" @if(request('role') === 'admin') selected @endif>Администратор</option>
                 </select>
-                <button type="submit" class="btn btn-outline" style="height:44px;">Фильтр</button>
-                <a href="{{ route('admin.users') }}" class="btn btn-outline" style="height:44px; display:flex; align-items:center; text-decoration:none;">Сброс</a>
+                <select name="sort_by" class="filter-input">
+                    <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Новые сначала</option>
+                    <option value="fio_asc" {{ request('sort_by') === 'fio_asc' ? 'selected' : '' }}>ФИО ↑</option>
+                    <option value="login_asc" {{ request('sort_by') === 'login_asc' ? 'selected' : '' }}>Логин ↑</option>
+                </select>
+                <div class="filter-actions">
+                    <button type="submit" class="btn btn-accent">Фильтр</button>
+                    <a href="{{ route('admin.users') }}" class="btn btn-danger">Сброс</a>
+                </div>
             </form>
         </div>
-        <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-            <thead style="background:#252738;">
+        <table>
+            <thead>
                 <tr>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">ID</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">ФИО</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Email</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Телефон</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Роль</th>
-                    <th style="padding:12px; text-align:left; border:1px solid #444;">Действие</th>
+                    <th>ID</th>
+                    <th>ФИО</th>
+                    <th>Email</th>
+                    <th>Телефон</th>
+                    <th>Роль</th>
+                    <th>Действие</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($users as $user)
-                    <tr style="background:#1E1E1E; border:1px solid #444;">
-                        <td style="padding:12px; border:1px solid #444;">{{ $user->id }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ $user->fio }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ $user->email }}</td>
-                        <td style="padding:12px; border:1px solid #444;">{{ $user->phone }}</td>
-                        @php
-                            $role = match($user->role) {
-                                'client'  => 'Клиент',
-                                'admin'   => 'Админ',
-                                'trainer' => 'Тренер',
-                                default   => '—',
-                            };
-                        @endphp
-                        <td style="padding:12px; border:1px solid #444;">{{ $role }}</td>
-                        <td style="padding:12px; text-align:center; border:1px solid #444;">
-                            <button type="button" class="btn btn-outline js-open-edit"
-                                data-id="{{ $user->id }}"
-                                data-fio="{{ $user->fio }}"
-                                data-phone="{{ $user->phone }}"
-                                data-email="{{ $user->email }}"
-                                data-login="{{ $user->login }}"
-                                data-role="{{ $user->role }}"
-                                style="margin-right:8px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right:8px;"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
-                                Редактировать
-                            </button>
-                            <form action="{{ route('user.delete', $user->id) }}" method="post" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-danger" title="Удалить" style="margin-left:6px; display:inline-flex; align-items:center; gap:8px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                                    Удалить
+                @if($users->count())
+                    @foreach($users as $user)
+                        <tr>
+                            <td>{{ $user->id }}</td>
+                            <td>{{ $user->fio }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->phone }}</td>
+                            @php
+                                $role = match($user->role) {
+                                    'client'  => 'Клиент',
+                                    'admin'   => 'Админ',
+                                    'trainer' => 'Тренер',
+                                    default   => '—',
+                                };
+                            @endphp
+                            <td>{{ $role }}</td>
+                            <td>
+                                <button type="button" class="btn btn-outline btn-icon-gap js-open-edit"
+                                    data-id="{{ $user->id }}"
+                                    data-fio="{{ $user->fio }}"
+                                    data-phone="{{ $user->phone }}"
+                                    data-email="{{ $user->email }}"
+                                    data-login="{{ $user->login }}"
+                                    data-role="{{ $user->role }}">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
+                                    Редактировать
                                 </button>
-                            </form>
-                        </td>
+                                <form action="{{ route('user.delete', $user->id) }}" method="post" class="form-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-danger btn-icon-gap" title="Удалить">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                        Удалить
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="6" class="td-empty">Нет совпадений по выбранным критериям</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
         <x-pagination :i="$users"/>
@@ -113,7 +126,7 @@
     <div id="editModal" class="modal hidden">
         <div class="modal-backdrop" onclick="closeModal()"></div>
         <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
-            <button class="close-btn" type="button" onclick="closeModal()" style="position:absolute; right:12px; top:12px;">
+            <button class="close-btn modal-close" type="button" onclick="closeModal()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <h3 id="editModalTitle">Редактировать пользователя</h3>
@@ -139,8 +152,8 @@
                     <option value="admin">Администратор</option>
                 </select>
                 @error('edit_role') <span class="error-msg">{{ $message }}</span> @enderror
-                <hr style="margin:12px 0; opacity:.6;">
-                <p style="opacity:.8; font-size:14px;">Оставьте пароль пустым, если не нужно менять</p>
+                <hr class="modal-hr">
+                <p class="modal-hint">Оставьте пароль пустым, если не нужно менять</p>
                 <label>Новый пароль</label>
                 <input type="password" name="edit_password">
                 @error('edit_password') <span class="error-msg">{{ $message }}</span> @enderror
@@ -148,7 +161,7 @@
                 <input type="password" name="edit_password_confirmation">
                 @error('edit_password_confirmation') <span class="error-msg">{{ $message }}</span> @enderror
 
-                <div style="margin-top:12px; display:flex; gap:10px; justify-content:flex-end;">
+                <div class="form-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal()">Отмена</button>
                     <button type="submit" class="btn btn-accent">Сохранить</button>
                 </div>

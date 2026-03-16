@@ -21,7 +21,7 @@
                             <div class="login-wrap">
                                 <input type="password" @error('password') class="invalid" @enderror name="password" id="password" value="{{ old('login') }}">
                                 <label for="password">Пароль</label>
-                                <div class="eye-btn">
+                                <div class="eye-btn" id="toggle-password">
                                     <svg width="22" height="16" viewBox="0 0 22 16" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" class="open">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -38,7 +38,7 @@
                                             stroke-linejoin="round" />
                                     </svg>
                                     <svg width="22" height="18" viewBox="0 0 22 18" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" class="close" style="display: none;">
+                                        xmlns="http://www.w3.org/2000/svg" class="close hidden">
                                         <path
                                             d="M3 1L8.87868 6.87868M19 17L13.1213 11.1213M8.87868 6.87868C8.33579 7.42157 8 8.17157 8 9C8 10.6569 9.34315 12 11 12C11.8284 12 12.5784 11.6642 13.1213 11.1213M8.87868 6.87868L13.1213 11.1213M5.76821 3.76821C3.72843 5.09899 1.96378 7.02601 1 8.99978C2.74646 12.5764 7.12201 16 10.9998 16C12.7376 16 14.5753 15.3124 16.2317 14.2317M8.76138 2.34717C9.51144 2.12316 10.2649 2 11.0005 2C14.8782 2 19.2531 5.42398 21 9.0002C20.448 10.1302 19.6336 11.2449 18.6554 12.2412"
                                             stroke="white" stroke-width="2" stroke-linecap="round"
@@ -81,3 +81,4 @@
     </div>
     </div>
 @endsection
+
