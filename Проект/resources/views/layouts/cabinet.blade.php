@@ -39,7 +39,7 @@
                     </a>
                 </div>
                 <div class="action-2">
-                    <div class="posxalko" onclick="startGojoEasterEgg()">
+                    <div class="posxalko" onclick="startEasterEgg()">
                         <div class="action-icon"><svg width="19" height="22" viewBox="0 0 19 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.7393 2.5V10V3.5C11.7393 2.67157 12.4108 2 13.2393 2C14.0677 2 14.7393 2.67157 14.7393 3.5V10V6.5C14.7393 5.67157 15.4108 5 16.2393 5C17.0677 5 17.7393 5.67157 17.7393 6.5V15C17.7393 18.3137 15.053 21 11.7393 21H10.6119C9.08759 21 7.62038 20.4198 6.5083 19.3772L1.54971 14.7285C0.832909 14.0565 0.814655 12.9246 1.50942 12.2298C2.18864 11.5506 3.28988 11.5506 3.96911 12.2298L5.73926 14V5.5C5.73926 4.67157 6.41084 4 7.23926 4C8.06769 4 8.73926 4.67157 8.73926 5.5V10V2.5C8.73926 1.67157 9.41084 1 10.2393 1C11.0677 1 11.7393 1.67157 11.7393 2.5Z" stroke="#FF8B77" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
@@ -59,11 +59,14 @@
             </div>
         </div>
     </section>
-    <div id="gojo-easter-egg" class="gojo-container">
+    <div id="gojo-easter-egg" class="easter-container gojo-container">
         <img src="{{ asset('img/gojo_dance.gif') }}" alt="Gojo Dance">
     </div>
+    <div id="gwvuq-easter-egg" class="easter-container gwvuq-container">
+        <img src="{{ asset('img/gwvuq.gif') }}" alt="Gwvuq Move">
+    </div>
     <style>
-        .gojo-container {
+        .easter-container {
             position: fixed;
             bottom: -150px; right: -150px;
             z-index: 9999;
@@ -72,20 +75,23 @@
             width: 300px;
             transition: opacity 0.8s ease;
         }
-        .gojo-container img { width: 100%; height: auto; }
-        .gojo-container.active {
+        .easter-container img { width: 100%; height: auto; }
+        .easter-container.active {
             display: block;
             bottom: -50px; right: 30px;
             animation:
-                gojo-appear 0.8s ease-out forwards,
-                gojo-infinity 4s ease-in-out infinite,
+                easter-appear 0.8s ease-out forwards,
+                easter-infinity 4s ease-in-out infinite,
                 aura-cycle 3s infinite alternate;
         }
-        .gojo-container.leaving {
-            animation: gojo-exit 1s ease-in forwards !important;
+        .easter-container.leaving {
+            animation: easter-exit 1s ease-in forwards !important;
             filter: drop-shadow(0 0 90px #8000ff) !important;
         }
-        @keyframes gojo-appear {
+        .gwvuq-container { left: -150px }
+        .gwvuq-container.active { left: 30px }
+        .gwvuq-container img { transform: scaleX(-1) }
+        @keyframes easter-appear {
             0% { transform: scale(0) rotate(30deg); opacity: 0; }
             100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
@@ -93,29 +99,36 @@
             0%   { filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.9)); }
             100% { filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.9)); }
         }
-        @keyframes gojo-infinity {
+        @keyframes easter-infinity {
             0%, 100% { transform: translate(0, 0); }
             25%  { transform: translate(-30px, -15px); }
             50%  { transform: translate(0, -30px); }
             75%  { transform: translate(30px, -15px); }
         }
-        @keyframes gojo-exit {
+        @keyframes easter-exit {
             0%   { transform: scale(1); opacity: 1; }
             100% { transform: scale(0) translate(100px, 100px); opacity: 0; }
         }
     </style>
     <script>
-        function startGojoEasterEgg() {
+        function startEasterEgg() {
             const gojo = document.getElementById('gojo-easter-egg');
-            if (gojo.classList.contains('active')) return;
+            const gwvuq = document.getElementById('gwvuq-easter-egg');
+            if (gojo.classList.contains('active') || gwvuq.classList.contains('active')) return;
             gojo.style.display = 'block';
+            gwvuq.style.display = 'block';
             gojo.classList.remove('leaving');
+            gwvuq.classList.remove('leaving');
             gojo.classList.add('active');
+            gwvuq.classList.add('active');
             setTimeout(() => {
                 gojo.classList.add('leaving');
+                gwvuq.classList.add('leaving');
                 setTimeout(() => {
                     gojo.classList.remove('active', 'leaving');
+                    gwvuq.classList.remove('active', 'leaving');
                     gojo.style.display = 'none';
+                    gwvuq.style.display = 'none';
                 }, 1000);
             }, 8000);
         }
