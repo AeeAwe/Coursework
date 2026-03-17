@@ -35,7 +35,8 @@
         <form method="get" action="{{ route('admin.abonements') }}" class="filter-form">
             <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
             <select name="sort_by" class="filter-input">
-                <option value="latest" {{ request('sort_by', 'latest') === 'latest' ? 'selected' : '' }}>Новые сначала</option>
+                <option value="latest" {{ request('sort_by', 'latest') === 'latest' ? 'selected' : '' }}>Сначала новые</option>
+                <option value="oldest" {{ request('sort_by') === 'oldest' ? 'selected' : '' }}>Сначала старые</option>
                 <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
                 <option value="price_asc" {{ request('sort_by') === 'price_asc' ? 'selected' : '' }}>Цена ↑</option>
                 <option value="price_desc" {{ request('sort_by') === 'price_desc' ? 'selected' : '' }}>Цена ↓</option>
@@ -70,14 +71,16 @@
                                     data-visits="{{ $abonement->visits }}"
                                     data-price="{{ $abonement->price }}"
                                     data-description="{{ $abonement->description }}">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
                                     Редактировать
                                 </button>
                                 <form action="{{ route('admin.delete-abonement', $abonement->id) }}" method="post" class="form-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-danger btn-icon-gap">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                    <button type="submit" class="btn btn-danger btn-icon-gap">
+                                        <svg width="21" height="24" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2 5V16C2 17.1046 2.89543 18 4 18H12C13.1046 18 14 17.1046 14 16V5M2 5H1M2 5H4M14 5H15M14 5H12M6 9V14M10 9V14M4 5V3C4 1.89543 4.89543 1 6 1H10C11.1046 1 12 1.89543 12 3V5M4 5H12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
                                         Удалить
                                     </button>
                                 </form>
@@ -93,31 +96,30 @@
         </table>
     </div>
 
-    <!-- Edit Abonement Modal -->
     <div id="editAbonementModal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeAbonementModal()"></div>
+        <div class="modal-backdrop" onclick="closeModal('editAbonementModal')"></div>
         <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editAbonementTitle">
-            <button class="close-btn modal-close" type="button" onclick="closeAbonementModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <button class="close-btn modal-close" type="button" onclick="closeModal('editAbonementModal')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <h3 id="editAbonementTitle">Редактировать абонемент</h3>
             <form id="editAbonementForm" method="post">
                 @csrf
                 @method('PUT')
-                <label>Название</label>
+                <label for="a_name">Название</label>
                 <input type="text" name="edit_name" id="a_name" value="{{ old('edit_name') }}">
                 @error('edit_name') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Количество посещений</label>
+                <label for="a_visits">Количество посещений</label>
                 <input type="number" name="edit_visits" id="a_visits" min="1" value="{{ old('edit_visits') }}">
                 @error('edit_visits') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Цена</label>
+                <label for="a_price">Цена</label>
                 <input type="number" name="edit_price" id="a_price" step="0.01" min="0" value="{{ old('edit_price') }}">
                 @error('edit_price') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Описание</label>
+                <label for="a_description">Описание</label>
                 <textarea name="edit_description" id="a_description">{{ old('edit_description') }}</textarea>
                 @error('edit_description') <span class="error-msg">{{ $message }}</span> @enderror
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeAbonementModal()">Отмена</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editAbonementModal')">Отмена</button>
                     <button type="submit" class="btn btn-accent">Сохранить</button>
                 </div>
             </form>
@@ -125,47 +127,19 @@
     </div>
 
     <script>
-        const abonementUpdateUrlTemplate = "{{ route('admin.update-abonement', ['abonement' => ':id']) }}";
+        document.addEventListener('DOMContentLoaded', function() {
+            const abonementUpdateUrlTemplate = "{{ route('admin.update-abonement', ['abonement' => ':id']) }}";
+            setupAbonementEditModal(abonementUpdateUrlTemplate);
 
-        function openEditAbonementModal(data){
-            document.getElementById('a_name').value = data.name || '';
-            document.getElementById('a_visits').value = data.visits || '';
-            document.getElementById('a_price').value = data.price || '';
-            document.getElementById('a_description').value = data.description || '';
-            const form = document.getElementById('editAbonementForm');
-            form.action = abonementUpdateUrlTemplate.replace(':id', data.id);
-            const modal = document.getElementById('editAbonementModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('visible');
-        }
-        function closeAbonementModal(){
-            const modal = document.getElementById('editAbonementModal');
-            modal.classList.remove('visible');
-            modal.classList.add('hidden');
-        }
-        document.addEventListener('click', function(e){
-            if(e.target && e.target.classList.contains('js-edit-abonement')){
-                const b = e.target.closest('.js-edit-abonement');
-                openEditAbonementModal({
-                    id: b.dataset.id,
-                    name: b.dataset.name,
-                    visits: b.dataset.visits,
-                    price: b.dataset.price,
-                    description: b.dataset.description,
-                });
-            }
-        });
-
-        @if(session('show_abonement_modal') && $errors->any())
-            document.addEventListener('DOMContentLoaded', function() {
+            @if(session('show_abonement_modal') && $errors->any())
                 openEditAbonementModal({
                     id: '{{ session("abonement_id") }}',
                     name: '{{ old("edit_name") }}',
                     visits: '{{ old("edit_visits") }}',
                     price: '{{ old("edit_price") }}',
                     description: '{{ old("edit_description") }}'
-                });
-            });
-        @endif
+                }, abonementUpdateUrlTemplate);
+            @endif
+        });
     </script>
 @endsection

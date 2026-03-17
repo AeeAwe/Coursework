@@ -221,28 +221,28 @@ button {
     text-align: center;
     height: 40px;
     padding: 0 16px;
-
     &:hover {
         transform: scale(.97);
     }
-
     &-accent {
-        padding: 0 20px;
         background-color: $accent;
-
         &:hover {
             background-color: $light-accent;
         }
     }
-
     &-outline {
         background-color: transparent;
         border: 2px solid $w;
         color: $w;
-
         &:hover {
             border-color: $accent;
             color: $accent;
+            svg {
+                pointer-events: none;
+            }
+            svg path {
+                stroke: $accent;
+            }
         }
     }
 
@@ -257,21 +257,8 @@ button {
     &-danger {
         background: $danger;
         color: $w;
-        padding: 0 12px;
-        height: 40px;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-family: $montserrat;
-        font-weight: 600;
-        transition: background .18s ease, transform .18s ease;
-
         &:hover {
             background: darken($danger, 8%);
-            transform: scale(.97);
         }
     }
 }
@@ -1589,6 +1576,16 @@ button {
         pointer-events: all;
     }
 
+    &-hr {
+        width: 100%;
+    }
+
+    &-hint {
+        font-size: 14px;
+        color: $w;
+        opacity: .6;
+    }
+
     &-backdrop {
         position: absolute;
         inset: 0;
@@ -1618,6 +1615,7 @@ button {
         }
 
         form {
+            width: 350px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -1647,6 +1645,7 @@ button {
         textarea {
             height: auto;
             min-height: 80px;
+            max-width: 100%;
         }
     }
 

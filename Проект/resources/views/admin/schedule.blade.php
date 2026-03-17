@@ -52,7 +52,8 @@
                 <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Отменено</option>
             </select>
             <select name="sort_by" class="filter-input">
-                <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Новые сначала</option>
+                <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Сначала новые</option>
+                <option value="id_asc" {{ request('sort_by') === 'id_asc' ? 'selected' : '' }}>Сначала старые</option>
                 <option value="date_asc" {{ request('sort_by') === 'date_asc' ? 'selected' : '' }}>Дата ↑</option>
                 <option value="date_desc" {{ request('sort_by') === 'date_desc' ? 'selected' : '' }}>Дата ↓</option>
                 <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
@@ -97,22 +98,24 @@
                                     data-date="{{ $item->date }}"
                                     data-trainer_id="{{ $item->trainer_id }}"
                                     data-capacity="{{ $item->capacity }}">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
                                     Редактировать
                                 </button>
 
                                 <button type="button" class="btn btn-outline btn-icon-gap js-change-status"
                                     data-id="{{ $item->id }}"
                                     data-status="{{ $item->status }}">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1.003 1.003 0 0 0 0-1.42L18.37 3.29a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.83z" fill="currentColor"/></svg>
                                     Статус
                                 </button>
 
                                 <form action="{{ route('admin.delete-schedule', $item->id) }}" method="post" class="form-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-danger btn-icon-gap">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="btn-icon-gap"><path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                    <button type="submit" class="btn btn-danger btn-icon-gap">
+                                        <svg width="21" height="24" viewBox="0 0 16 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2 5V16C2 17.1046 2.89543 18 4 18H12C13.1046 18 14 17.1046 14 16V5M2 5H1M2 5H4M14 5H15M14 5H12M6 9V14M10 9V14M4 5V3C4 1.89543 4.89543 1 6 1H10C11.1046 1 12 1.89543 12 3V5M4 5H12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
                                         Удалить
                                     </button>
                                 </form>
@@ -129,22 +132,22 @@
     </div>
 
     <div id="editScheduleModal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeScheduleModal()"></div>
+        <div class="modal-backdrop" onclick="closeModal('editScheduleModal')"></div>
         <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="editScheduleTitle">
-            <button class="close-btn modal-close" type="button" onclick="closeScheduleModal()">
+            <button class="close-btn modal-close" type="button" onclick="closeModal('editScheduleModal')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <h3 id="editScheduleTitle">Редактировать занятие</h3>
             <form id="editScheduleForm" method="post">
                 @csrf
                 @method('PUT')
-                <label>Название занятия</label>
+                <label for="s_name">Название занятия</label>
                 <input type="text" name="edit_name" id="s_name" required>
                 @error('edit_name') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Дата и время</label>
+                <label for="s_date">Дата и время</label>
                 <input type="datetime-local" name="edit_date" id="s_date" required>
                 @error('edit_date') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Тренер</label>
+                <label for="s_trainer_id">Тренер</label>
                 <select name="edit_trainer_id" id="s_trainer_id">
                     <option value="">Не выбран</option>
                     @foreach($trainers as $t)
@@ -152,11 +155,11 @@
                     @endforeach
                 </select>
                 @error('edit_trainer_id') <span class="error-msg">{{ $message }}</span> @enderror
-                <label>Вместимость</label>
+                <label for="s_capacity">Вместимость</label>
                 <input type="number" name="edit_capacity" id="s_capacity" min="1" value="15">
                 @error('edit_capacity') <span class="error-msg">{{ $message }}</span> @enderror
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeScheduleModal()">Отмена</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('editScheduleModal')">Отмена</button>
                     <button type="submit" class="btn btn-accent">Сохранить</button>
                 </div>
             </form>
@@ -164,23 +167,23 @@
     </div>
 
     <div id="statusScheduleModal" class="modal hidden">
-        <div class="modal-backdrop" onclick="closeStatusModal()"></div>
+        <div class="modal-backdrop" onclick="closeModal('statusScheduleModal')"></div>
         <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="statusScheduleTitle">
-            <button class="close-btn modal-close" type="button" onclick="closeStatusModal()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <button class="close-btn modal-close" type="button" onclick="closeModal('statusScheduleModal')">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
             <h3 id="statusScheduleTitle">Изменить статус занятия</h3>
             <form id="statusScheduleForm" method="post">
                 @csrf
                 @method('PATCH')
-                <label>Выберите новый статус</label>
+                <label for="status_select">Выберите новый статус</label>
                 <select name="status" id="status_select" required>
                     <option value="active">Активно</option>
                     <option value="completed">Завершено</option>
                     <option value="cancelled">Отменено</option>
                 </select>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline" onclick="closeStatusModal()">Отмена</button>
+                    <button type="button" class="btn btn-outline" onclick="closeModal('statusScheduleModal')">Отмена</button>
                     <button type="submit" class="btn btn-accent">Сохранить</button>
                 </div>
             </form>
@@ -188,71 +191,20 @@
     </div>
 
     <script>
-        const scheduleUpdateUrlTemplate = "{{ route('admin.update-schedule', ['schedule' => ':id']) }}";
-        const scheduleStatusUrlTemplate = "{{ route('admin.update-schedule-status', ['schedule' => ':id']) }}";
+        document.addEventListener('DOMContentLoaded', function() {
+            const editUrlTemplate = "{{ route('admin.update-schedule', ['schedule' => ':id']) }}";
+            const statusUrlTemplate = "{{ route('admin.update-schedule-status', ['schedule' => ':id']) }}";
+            setupScheduleEditModal(editUrlTemplate, statusUrlTemplate);
 
-        function openEditScheduleModal(data){
-            document.getElementById('s_name').value = data.name || '';
-            const dateValue = data.date ? data.date.substring(0, 16) : '';
-            document.getElementById('s_date').value = dateValue;
-            document.getElementById('s_trainer_id').value = data.trainer_id || '';
-            document.getElementById('s_capacity').value = data.capacity || 15;
-            const form = document.getElementById('editScheduleForm');
-            form.action = scheduleUpdateUrlTemplate.replace(':id', data.id);
-            const modal = document.getElementById('editScheduleModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('visible');
-        }
-        function closeScheduleModal(){
-            const modal = document.getElementById('editScheduleModal');
-            modal.classList.remove('visible');
-            modal.classList.add('hidden');
-        }
-
-        function openStatusScheduleModal(data){
-            document.getElementById('status_select').value = data.status || 'active';
-            const form = document.getElementById('statusScheduleForm');
-            form.action = scheduleStatusUrlTemplate.replace(':id', data.id);
-            const modal = document.getElementById('statusScheduleModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('visible');
-        }
-        function closeStatusModal(){
-            const modal = document.getElementById('statusScheduleModal');
-            modal.classList.remove('visible');
-            modal.classList.add('hidden');
-        }
-
-        document.addEventListener('click', function(e){
-            if(e.target && e.target.classList.contains('js-edit-schedule')){
-                const b = e.target.closest('.js-edit-schedule');
-                openEditScheduleModal({
-                    id: b.dataset.id,
-                    name: b.dataset.name,
-                    date: b.dataset.date,
-                    trainer_id: b.dataset.trainer_id,
-                    capacity: b.dataset.capacity,
-                });
-            }
-            if(e.target && e.target.classList.contains('js-change-status')){
-                const b = e.target.closest('.js-change-status');
-                openStatusScheduleModal({
-                    id: b.dataset.id,
-                    status: b.dataset.status,
-                });
-            }
-        });
-
-        @if(session('show_schedule_modal') && $errors->any())
-            document.addEventListener('DOMContentLoaded', function() {
+            @if(session('show_schedule_modal') && $errors->any())
                 openEditScheduleModal({
                     id: '{{ session("schedule_id") }}',
                     name: '{{ old("edit_name") }}',
                     date: '{{ old("edit_date") }}',
                     trainer_id: '{{ old("edit_trainer_id") }}',
                     capacity: '{{ old("edit_capacity", 15) }}'
-                });
-            });
-        @endif
+                }, editUrlTemplate);
+            @endif
+        });
     </script>
 @endsection

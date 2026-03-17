@@ -58,6 +58,7 @@ class AdminController extends Controller
         }
 
         match ($sortBy) {
+            'id_asc' => $query->orderBy('id', 'asc'),
             'fio_asc' => $query->orderBy('fio', 'asc'),
             'login_asc' => $query->orderBy('login', 'asc'),
             default => $query->orderBy('id', 'desc'),
@@ -176,6 +177,7 @@ class AdminController extends Controller
         }
 
         match ($sortBy) {
+            'id_asc' => $query->orderBy('id', 'asc'),
             'date_asc' => $query->orderBy('date', 'asc'),
             'date_desc' => $query->orderBy('date', 'desc'),
             'name_asc' => $query->orderBy('name', 'asc'),
@@ -256,6 +258,7 @@ class AdminController extends Controller
         }
 
         match ($sortBy) {
+            'oldest' => $query->orderBy('id', 'asc'),
             'name_asc' => $query->orderBy('name', 'asc'),
             'price_asc' => $query->orderBy('price', 'asc'),
             'price_desc' => $query->orderBy('price', 'desc'),

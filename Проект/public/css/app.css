@@ -194,7 +194,6 @@ button {
   transform: scale(0.97);
 }
 .btn-accent {
-  padding: 0 20px;
   background-color: #FCC40A;
 }
 .btn-accent:hover {
@@ -209,6 +208,12 @@ button {
   border-color: #FCC40A;
   color: #FCC40A;
 }
+.btn-outline:hover svg {
+  pointer-events: none;
+}
+.btn-outline:hover svg path {
+  stroke: #FCC40A;
+}
 .btn-xs {
   font-size: 13px;
   padding: 3px 10px;
@@ -219,21 +224,9 @@ button {
 .btn-danger {
   background: #D00000;
   color: #FFFFFF;
-  padding: 0 12px;
-  height: 40px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: "Montserrat", Verdana, Geneva, Tahoma, sans-serif;
-  font-weight: 600;
-  transition: background 0.18s ease, transform 0.18s ease;
 }
 .btn-danger:hover {
   background: rgb(167.2, 0, 0);
-  transform: scale(0.97);
 }
 
 .filter-input {
@@ -1310,6 +1303,14 @@ button {
   opacity: 1;
   pointer-events: all;
 }
+.modal-hr {
+  width: 100%;
+}
+.modal-hint {
+  font-size: 14px;
+  color: #FFFFFF;
+  opacity: 0.6;
+}
 .modal-backdrop {
   position: absolute;
   inset: 0;
@@ -1337,6 +1338,7 @@ button {
   color: #FEEFBB;
 }
 .modal-panel form {
+  width: 350px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -1363,6 +1365,7 @@ button {
 .modal-panel textarea {
   height: auto;
   min-height: 80px;
+  max-width: 100%;
 }
 .modal.hidden .modal-panel {
   transform: translateY(-12px) scale(0.96);

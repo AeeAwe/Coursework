@@ -110,27 +110,4 @@
             100% { transform: scale(0) translate(100px, 100px); opacity: 0; }
         }
     </style>
-    <script>
-        function startEasterEgg() {
-            const gojo = document.getElementById('gojo-easter-egg');
-            const gwvuq = document.getElementById('gwvuq-easter-egg');
-            if (gojo.classList.contains('active') || gwvuq.classList.contains('active')) return;
-            gojo.style.display = 'block';
-            gwvuq.style.display = 'block';
-            gojo.classList.remove('leaving');
-            gwvuq.classList.remove('leaving');
-            gojo.classList.add('active');
-            gwvuq.classList.add('active');
-            setTimeout(() => {
-                gojo.classList.add('leaving');
-                gwvuq.classList.add('leaving');
-                setTimeout(() => {
-                    gojo.classList.remove('active', 'leaving');
-                    gwvuq.classList.remove('active', 'leaving');
-                    gojo.style.display = 'none';
-                    gwvuq.style.display = 'none';
-                }, 1000);
-            }, 8000);
-        }
-    </script>
 @endsection
