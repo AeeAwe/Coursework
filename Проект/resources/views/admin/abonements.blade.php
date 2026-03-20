@@ -33,14 +33,20 @@
     <div class="admin-list">
         <h3>Список абонементов</h3>
         <form method="get" action="{{ route('admin.abonements') }}" class="filter-form">
-            <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
-            <select name="sort_by" class="filter-input">
-                <option value="latest" {{ request('sort_by', 'latest') === 'latest' ? 'selected' : '' }}>Сначала новые</option>
-                <option value="oldest" {{ request('sort_by') === 'oldest' ? 'selected' : '' }}>Сначала старые</option>
-                <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
-                <option value="price_asc" {{ request('sort_by') === 'price_asc' ? 'selected' : '' }}>Цена ↑</option>
-                <option value="price_desc" {{ request('sort_by') === 'price_desc' ? 'selected' : '' }}>Цена ↓</option>
-            </select>
+            <div class="filter-item">
+                <label for="search" class="text-small">Поиск</label>
+                <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="sort_by" class="text-small">Сортировка</label>
+                <select name="sort_by" class="filter-input">
+                    <option value="latest" {{ request('sort_by', 'latest') === 'latest' ? 'selected' : '' }}>Сначала новые</option>
+                    <option value="oldest" {{ request('sort_by') === 'oldest' ? 'selected' : '' }}>Сначала старые</option>
+                    <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
+                    <option value="price_asc" {{ request('sort_by') === 'price_asc' ? 'selected' : '' }}>Цена ↑</option>
+                    <option value="price_desc" {{ request('sort_by') === 'price_desc' ? 'selected' : '' }}>Цена ↓</option>
+                </select>
+            </div>
             <div class="filter-actions">
                 <button type="submit" class="btn btn-accent">Поиск</button>
                 <a href="{{ route('admin.abonements') }}" class="btn btn-danger">Сброс</a>

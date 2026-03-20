@@ -48,6 +48,14 @@ class TrainerController extends Controller
 
     public function cancelActivity(Request $request, UserActivity $activity)
     {
+        $userAbonement = UserAbonement::where('user_id', $activity->user_id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($userAbonement) {
+            $userAbonement->increment('visits_left');
+        }
+
         $activity->delete();
 
         return redirect()->back()->with('success', 'Запись отменена');

@@ -36,28 +36,46 @@
     <div class="admin-list">
         <h3>Список занятий</h3>
         <form method="get" action="{{ route('admin.schedule') }}" class="filter-form">
-            <input type="text" name="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
-            <input type="date" name="date_from" value="{{ request('date_from') }}" class="filter-input">
-            <input type="date" name="date_to" value="{{ request('date_to') }}" class="filter-input">
-            <select name="trainer_id" class="filter-input">
-                <option value="">Все тренеры</option>
-                @foreach($trainers as $t)
-                    <option value="{{ $t->id }}" {{ request('trainer_id') == $t->id ? 'selected' : '' }}>{{ $t->fio }}</option>
-                @endforeach
-            </select>
-            <select name="status" class="filter-input">
-                <option value="">Все статусы</option>
-                <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Активно</option>
-                <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Завершено</option>
-                <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Отменено</option>
-            </select>
-            <select name="sort_by" class="filter-input">
-                <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Сначала новые</option>
-                <option value="id_asc" {{ request('sort_by') === 'id_asc' ? 'selected' : '' }}>Сначала старые</option>
-                <option value="date_asc" {{ request('sort_by') === 'date_asc' ? 'selected' : '' }}>Дата ↑</option>
-                <option value="date_desc" {{ request('sort_by') === 'date_desc' ? 'selected' : '' }}>Дата ↓</option>
-                <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
-            </select>
+            <div class="filter-item">
+                <label for="search" class="text-small">Поиск</label>
+                <input type="text" name="search" id="search" placeholder="Поиск по названию..." value="{{ request('search') }}" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="date_from" class="text-small">Дата от</label>
+                <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="date_to" class="text-small">Дата до</label>
+                <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="trainer_id" class="text-small">Тренер</label>
+                <select name="trainer_id" id="trainer_id" class="filter-input">
+                    <option value="">Все</option>
+                    @foreach($trainers as $t)
+                        <option value="{{ $t->id }}" {{ request('trainer_id') == $t->id ? 'selected' : '' }}>{{ $t->fio }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="status" class="text-small">Статус</label>
+                <select name="status" id="status" class="filter-input">
+                    <option value="">Все</option>
+                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Активно</option>
+                    <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Завершено</option>
+                    <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>Отменено</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="sort_by" class="text-small">Сортировка</label>
+                <select name="sort_by" id="sort_by" class="filter-input">
+                    <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Сначала новые</option>
+                    <option value="id_asc" {{ request('sort_by') === 'id_asc' ? 'selected' : '' }}>Сначала старые</option>
+                    <option value="date_asc" {{ request('sort_by') === 'date_asc' ? 'selected' : '' }}>Дата ↑</option>
+                    <option value="date_desc" {{ request('sort_by') === 'date_desc' ? 'selected' : '' }}>Дата ↓</option>
+                    <option value="name_asc" {{ request('sort_by') === 'name_asc' ? 'selected' : '' }}>Название ↑</option>
+                </select>
+            </div>
             <div class="filter-actions">
                 <button type="submit" class="btn btn-accent">Фильтр</button>
                 <a href="{{ route('admin.schedule') }}" class="btn btn-danger">Сброс</a>

@@ -83,6 +83,16 @@ class ClientController extends Controller
             return redirect()->route('schedule')->with('error', 'Занятие полностью заполнено');
         }
 
+        $userAbonement = UserAbonement::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$userAbonement || $userAbonement->visits_left <= 0) {
+            return redirect()->route('schedule')->with('error', 'У вас нет доступных посещений');
+        }
+
+        $userAbonement->decrement('visits_left');
+
         UserActivity::create([
             'user_id' => $user->id,
             'schedule_id' => $schedule->id,
@@ -98,6 +108,15 @@ class ClientController extends Controller
         if (!\Carbon\Carbon::parse($userActivity->schedule->date)->isFuture()) {
             return back()->with('error', 'Нельзя отменить запись, если дата уже прошла');
         }
+
+        $userAbonement = UserAbonement::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($userAbonement) {
+            $userAbonement->increment('visits_left');
+        }
+
         $userActivity->delete();
         return redirect()->route('cabinet.activities')->with('success', 'Запись отменена');
     }

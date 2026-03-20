@@ -16,7 +16,7 @@
                 @if(session('success'))
                     <div class="flash flash-success" role="status">
                         <div class="flash-icon" aria-hidden="true">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div class="flash-body">{{ session('success') }}</div>
                         <button class="close-btn" type="button" onclick="this.parentElement.classList.add('fade-out'); setTimeout(()=>this.parentElement.remove(),380);">&times;</button>

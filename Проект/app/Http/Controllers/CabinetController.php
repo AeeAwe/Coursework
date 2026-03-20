@@ -37,6 +37,15 @@ class CabinetController extends Controller
         if (!\Carbon\Carbon::parse($userActivity->schedule->date)->isFuture()) {
             return back()->with('error', 'Нельзя отменить запись, если дата уже прошла.');
         }
+
+        $userAbonement = UserAbonement::where('user_id', $user->id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($userAbonement) {
+            $userAbonement->increment('visits_left');
+        }
+
         $userActivity->delete();
         return redirect()->route('cabinet')->with('success', 'Запись отменена.');
     }

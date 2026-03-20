@@ -42,27 +42,34 @@
 
     <div class="admin-list">
         <h3>Список пользователей</h3>
-        <div class="filters">
-            <form method="get" action="{{ route('admin.users') }}" class="filter-form">
-                <input type="text" name="search" placeholder="Поиск (ФИО, логин, email)" value="{{ request('search') }}" class="filter-input">
-                <select name="role" class="filter-input">
-                    <option value="">Все роли</option>
+        <form method="get" action="{{ route('admin.users') }}" class="filter-form">
+            <div class="filter-item">
+                <label for="search" class="text-small">Поиск</label>
+                <input type="text" name="search" id="search" placeholder="Поиск (ФИО, логин, email)" value="{{ request('search') }}" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="role" class="text-small">Роль</label>
+                <select name="role" id="role" class="filter-input">
+                    <option value="">Все</option>
                     <option value="client" @if(request('role') === 'client') selected @endif>Клиент</option>
                     <option value="trainer" @if(request('role') === 'trainer') selected @endif>Тренер</option>
                     <option value="admin" @if(request('role') === 'admin') selected @endif>Администратор</option>
                 </select>
-                <select name="sort_by" class="filter-input">
+            </div>
+            <div class="filter-item">
+                <label for="sort_by" class="text-small">Сортировка</label>
+                <select name="sort_by" id="sort_by" class="filter-input">
                     <option value="id_desc" {{ request('sort_by', 'id_desc') === 'id_desc' ? 'selected' : '' }}>Сначала новые</option>
                     <option value="id_asc" {{ request('sort_by') === 'id_asc' ? 'selected' : '' }}>Сначала старые</option>
                     <option value="fio_asc" {{ request('sort_by') === 'fio_asc' ? 'selected' : '' }}>ФИО ↑</option>
                     <option value="login_asc" {{ request('sort_by') === 'login_asc' ? 'selected' : '' }}>Логин ↑</option>
                 </select>
-                <div class="filter-actions">
-                    <button type="submit" class="btn btn-accent">Фильтр</button>
-                    <a href="{{ route('admin.users') }}" class="btn btn-danger">Сброс</a>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-accent">Фильтр</button>
+                <a href="{{ route('admin.users') }}" class="btn btn-danger">Сброс</a>
+            </div>
+        </form>
         <table>
             <thead>
                 <tr>
