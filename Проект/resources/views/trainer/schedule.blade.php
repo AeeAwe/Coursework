@@ -29,7 +29,7 @@
                         $status = match($item->status) {
                             'active'  => 'Активно',
                             'full'   => 'Заполнено',
-                            'ended'   => 'Закончилось',
+                            'completed'   => 'Завершено',
                             default   => '—',
                         };
                         @endphp

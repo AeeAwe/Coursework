@@ -9,9 +9,6 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         User::create([
@@ -60,7 +57,7 @@ class DatabaseSeeder extends Seeder
             Schedule::create([
                 'trainer_id' => User::where('role', 'trainer')->firstOrFail()->id,
                 'name' => collect(['Пилатес','Йога','Групповая тренировка','Тяжелый вес'])->random(),
-                'date' => now()->addDays(rand(3,9))->setTime(rand(9, 18), 0, 0),
+                'date' => now()->addDays(rand(5,16))->setTime(rand(9, 18), 0, 0),
                 'capacity' => rand(2, 6) * 5,
                 'status' => 'active',
             ]);

@@ -41,7 +41,7 @@
 			<div class="filter-actions">
 				<button type="submit" class="btn btn-accent">Применить</button>
                 <a href="{{ route('schedule') }}" class="btn btn-danger">Сброс</a>
-                <a href="{{ route('cabinet.abonements') }}" class="btn btn-accent">Мой кабинет</a>
+                <a href="{{ route('cabinet.activities') }}" class="btn btn-accent">Мои записи</a>
 			</div>
 		</form>
 
